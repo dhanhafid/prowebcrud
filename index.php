@@ -49,7 +49,7 @@
                 $abjad = 'E';
             }
 
-            $sql = "INSERT INTO nilaimahasiswa VALUES ('', '$nama', '$tugas', '$uts', '$uas', '$mean', '$abjad')";
+            $sql = "INSERT INTO nilaimahasiswa VALUES ('', '$nama', '$uts', '$uas', '$tugas', '$mean', '$abjad')";
 
             $query = mysqli_query($conn, $sql);
             if(!$query) {

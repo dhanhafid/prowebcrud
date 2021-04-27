@@ -1,9 +1,9 @@
 <?php
     include_once 'connect.php';
 
-    $nim = $_GET['detail'];
+    $id = $_GET['detail'];
 
-    $sql = "DELETE FROM nilaimahasiswa WHERE nim = '$nim'  ";
+    $sql = "DELETE FROM nilaimahasiswa WHERE id = '$id'  ";
     
     $rs = $conn->Execute($sql);
     

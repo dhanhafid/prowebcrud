@@ -1,5 +1,5 @@
 <?php
-    include_once('connect.php');
+    include_once 'connect.php';
 ?>
 
 <!DOCTYPE html>
@@ -20,10 +20,11 @@
 <body>
     <h2>Nilai Mahasiswa</h2>
     <form method="POST">
-        Nama Mahasiswa : <input type="text" name="nama"><br>
-        Nilai Tugas : <input type="number" name="tugas" min="0" max="100"><br>
-        Nilai UTS : <input type="number" name="uts" min="0" max="100"><br>
-        Nilai UAS : <input type="number" name="uas" min="0" max="100"><br><br>
+        NIM : <input type="text" name="nim" maxlength="9" ><br>
+        Nama Mahasiswa : <input type="text" name="nama" maxlength="100"><br>
+        Nilai Tugas : <input type="number" name="tugas" min="0" max="100" value=NULL><br>
+        Nilai UTS : <input type="number" name="uts" min="0" max="100" value="NULL"><br>
+        Nilai UAS : <input type="number" name="uas" min="0" max="100" value="NULL"><br><br>
 
         <input type="submit" name="input"><br>
         <hr>
@@ -31,25 +32,13 @@
 
     <?php
         if (isset($_POST['input'])) {
-            $nama = $_POST['nama'];
+            $nim = $_POST['nim'];
+            $nama = AddSlashes($_POST['nama']);
             $tugas = $_POST['tugas'];
             $uts = $_POST['uts'];
             $uas = $_POST['uas'];
-            $mean = round(($_POST['tugas'] + $_POST['uts'] + $_POST['uas']) / 3 );
-            $abjad = NULL;
-            if ($mean >= 90){
-                $abjad = 'A';
-            } elseif ($mean >= 80 && $mean <= 89) {
-                $abjad = 'B';
-            } elseif ($mean >= 70 && $mean <= 79) {
-                $abjad = 'C';
-            }elseif ($mean >= 60 && $mean <= 69) {
-                $abjad = 'D';
-            }else{
-                $abjad = 'E';
-            }
 
-            $sql = "INSERT INTO nilaimahasiswa VALUES ('', '$nama', '$uts', '$uas', '$tugas', '$mean', '$abjad')";
+            $sql = "INSERT INTO nilaimahasiswa VALUES ('', '$nim', '$nama', '$uts', '$uas', '$tugas')";
 
             $conn->Execute($sql);
             $result = $conn->Affected_Rows();
@@ -75,14 +64,27 @@
 
                 while (!$rs->EOF) { ?>
                     <tr>
-                        <td style="text-align:center;"><?php echo $rs->fields[0]; ?></td>
                         <td style="text-align:center;"><?php echo $rs->fields[1]; ?></td>
                         <td style="text-align:center;"><?php echo $rs->fields[2]; ?></td>
+                        <td style="text-align:center;"><?php echo $rs->fields[5]; ?></td>
                         <td style="text-align:center;"><?php echo $rs->fields[3]; ?></td>
                         <td style="text-align:center;"><?php echo $rs->fields[4]; ?></td>
-                        <td style="text-align:center;"><?php echo $rs->fields[5]; ?></td>
-                        <td style="text-align:center;"><?php echo $rs->fields[6]; ?></td>
-                        <td><a href="hapus.php?detail=<?php echo $rs->fields[0]; ?>">hapus</a> | <a href="edit.php?detail=<?php echo $rs->fields[0]; ?>">edit</a></td>
+                        <?php $mean = round(($rs->fields[3]+$rs->fields[4]+$rs->fields[5]) / 3); ?>
+                        <td style="text-align:center;"><?php echo $mean ?></td>
+                        <?php $abjad = $abjad = "NULL";
+                            if ($mean >= 90){
+                                $abjad = 'A';
+                            } elseif ($mean >= 80 && $mean <= 89) {
+                                $abjad = 'B';
+                            } elseif ($mean >= 70 && $mean <= 79) {
+                                $abjad = 'C';
+                            }elseif ($mean >= 60 && $mean <= 69) {
+                                $abjad = 'D';
+                            }else{
+                                $abjad = 'E';
+                            } ?>
+                        <td style="text-align:center;"><?php echo $abjad; ?></td>
+                        <td><a href="hapus.php?detail=<?php echo $rs->fields[0]; ?>" onclick="return confirm('Data akan dihapus, Anda yakin ?')">hapus</a> | <a href="edit.php?detail=<?php echo $rs->fields[0]; ?>">edit</a></td>
                     </tr>
                 <?php
                 $rs->MoveNext();

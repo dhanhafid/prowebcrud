@@ -1,11 +1,9 @@
 <?php
-    $db_host = 'localhost';
-    $db_user = 'root';
-    $db_pass = '';
-    $db_name = 'prowebcrud';
+    include_once("adodb5/adodb.inc.php");
+    $conn = NewADOConnection("mysqli");
+    $conn->Connect("localhost", "root", "", "prowebcrud");
+    global $conn;
     
-    $conn = mysqli_connect($db_host,$db_user,$db_pass,$db_name);
-   
     if (!$conn) {
     die ('failed to connect: ' . mysqli_connect_error());
     }

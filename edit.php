@@ -34,19 +34,20 @@
 
             $sql = 'SELECT * FROM `nilaimahasiswa` WHERE `nim` = '.$nim.'';
 
-            $query = mysqli_query($conn, $sql);
-            if(!$query) {
-                die ('SQL Error: ' . mysqli_error(($conn)));
-            }
+            $rs = $conn->Execute($sql);
 
-            while ($row = mysqli_fetch_array($query)) {
-                echo '<tr><td>' . $row["nim"] . '</td>' . 
-                '<td>' . $row["nama_mhs"] . '</td>' .
-                '<td>' . $row["nilai_tugas"] . '</td>' .
-                '<td>' . $row["nilai_uts"] . '</td>' .
-                '<td>' . $row["nilai_uas"] . '</td>' .
-                '<td>' . $row["nilai_ratarata"] . '</td>' . 
-                '<td>' . $row["nilai_konversi"] . '</td>';
+            while (!$rs->EOF) { ?>
+                <tr>
+                    <td style="text-align:center;"><?php echo $rs->fields[0]; ?></td>
+                    <td style="text-align:center;"><?php echo $rs->fields[1]; ?></td>
+                    <td style="text-align:center;"><?php echo $rs->fields[2]; ?></td>
+                    <td style="text-align:center;"><?php echo $rs->fields[3]; ?></td>
+                    <td style="text-align:center;"><?php echo $rs->fields[4]; ?></td>
+                    <td style="text-align:center;"><?php echo $rs->fields[5]; ?></td>
+                    <td style="text-align:center;"><?php echo $rs->fields[6]; ?></td>
+                </tr>
+            <?php
+            $rs->MoveNext();
             }
         ?>
     </table>
@@ -81,10 +82,8 @@
 
             $sql = "UPDATE `nilaimahasiswa` SET `nilai_uts` = '$uts', `nilai_uas` = '$uas', `nilai_tugas` = '$tugas', `nilai_ratarata` = '$mean', `nilai_konversi` = '$abjad' WHERE `nilaimahasiswa`.`nim` = '$nim'";
 
-            $query = mysqli_query($conn, $sql);
-            if(!$query) {
-                die ('SQL Error: ' . mysqli_error(($conn)));
-        }    
+            $conn->Execute($sql);
+            $result = $conn->Affected_Rows();
         
         header('location:index.php');
 

@@ -1,13 +1,12 @@
 <?php
-    include 'connect.php';
+    include_once 'connect.php';
 
     $nim = $_GET['detail'];
 
     $sql = "DELETE FROM nilaimahasiswa WHERE nim = '$nim'  ";
-    $query = mysqli_query($conn, $sql);
-    if(!$query) {
-        die ('SQL Error: ' . mysqli_error(($conn)));
-    }
+    
+    $rs = $conn->Execute($sql);
+    
 
     header('location:index.php');
 ?>

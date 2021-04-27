@@ -1,5 +1,5 @@
 <?php
-    include 'connect.php';
+    include_once('connect.php');
 ?>
 
 <!DOCTYPE html>
@@ -51,10 +51,9 @@
 
             $sql = "INSERT INTO nilaimahasiswa VALUES ('', '$nama', '$uts', '$uas', '$tugas', '$mean', '$abjad')";
 
-            $query = mysqli_query($conn, $sql);
-            if(!$query) {
-                die ('SQL Error: ' . mysqli_error(($conn)));
-            }     
+            $conn->Execute($sql);
+            $result = $conn->Affected_Rows();
+
     } ?>
 
     <table>
@@ -70,28 +69,26 @@
         </tr>
 
         <?php
-            $sql = 'SELECT * FROM `nilaimahasiswa`';
+            $rs = $conn->Execute("select * from nilaimahasiswa");
 
-            $query = mysqli_query($conn, $sql);
-            if(!$query) {
-                die ('SQL Error: ' . mysqli_error(($conn)));
+            if($rs -> RecordCount() > 0){
+
+                while (!$rs->EOF) { ?>
+                    <tr>
+                        <td style="text-align:center;"><?php echo $rs->fields[0]; ?></td>
+                        <td style="text-align:center;"><?php echo $rs->fields[1]; ?></td>
+                        <td style="text-align:center;"><?php echo $rs->fields[2]; ?></td>
+                        <td style="text-align:center;"><?php echo $rs->fields[3]; ?></td>
+                        <td style="text-align:center;"><?php echo $rs->fields[4]; ?></td>
+                        <td style="text-align:center;"><?php echo $rs->fields[5]; ?></td>
+                        <td style="text-align:center;"><?php echo $rs->fields[6]; ?></td>
+                        <td><a href="hapus.php?detail=<?php echo $rs->fields[0]; ?>">hapus</a> | <a href="edit.php?detail=<?php echo $rs->fields[0]; ?>">edit</a></td>
+                    </tr>
+                <?php
+                $rs->MoveNext();
+                }
+
             }
-
-            while ($row = mysqli_fetch_array($query)) {
-                echo '<tr><td>' . $row["nim"] . '</td>' . 
-                '<td>' . $row["nama_mhs"] . '</td>' .
-                '<td>' . $row["nilai_tugas"] . '</td>' .
-                '<td>' . $row["nilai_uts"] . '</td>' .
-                '<td>' . $row["nilai_uas"] . '</td>' .
-                '<td>' . $row["nilai_ratarata"] . '</td>' . 
-                '<td>' . $row["nilai_konversi"] . '</td>';?>
-                <td><a href="hapus.php?detail=<?php echo $row['nim']; ?>">hapus</a> | <a href="edit.php?detail=<?php echo $row['nim']; ?>">edit</a></td>
-                </tr>
-            <?php
-            }
-
-            mysqli_free_result($query);
-            mysqli_close($conn);
         ?>
         
     </table>

@@ -15,6 +15,7 @@
             padding: 5px;
         }
     </style>
+    <script type="text/javascript" src="/js/proses.js"></script>
     <title>Input Nilai</title>
 </head>
 <body>

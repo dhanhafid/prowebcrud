@@ -15,86 +15,61 @@
             padding: 5px;
         }
     </style>
-    <script type="text/javascript" src="/js/proses.js"></script>
+    <!-- <script type="text/javascript" src="/js/proses.js"></script> -->
+    <script>
+        function simpan() {
+            var nim = document.getElementById("nim").value;
+            var nama = document.getElementById("nama").value;
+            var tugas = document.getElementById("tugas").value;
+            var uts = document.getElementById("uts").value;
+            var uas = document.getElementById("uas").value;
+
+            if (window.XMLHttpRequest) {
+                xmlhttp = new XMLHttpRequest();
+            } else {
+                xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+            }
+
+            var url = "simpan.php";
+            var params = "nim="+nim+"&nama="+nama+"&tugas="+tugas+"&uts="+uts+"&uas="+uas;
+            xmlhttp.open("POST", url, true);
+            xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xmlhttp.onreadystatechange = function() {
+                if(xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    document.getElementById("tabel").innerHTML = xmlhttp.responseText;
+                    bersih();
+                }
+            }
+
+            xmlhttp.send(params);
+        }
+
+        function bersih() {
+            document.getElementById("nim").value = "";
+            document.getElementById("nama").value = "";
+            document.getElementById("tugas").value = "";
+            document.getElementById("uts").value = "";
+            document.getElementById("uas").value = "";
+        }
+    </script>
     <title>Input Nilai</title>
 </head>
 <body>
     <h2>Nilai Mahasiswa</h2>
     <form method="POST">
-        NIM : <input type="text" name="nim" maxlength="9" ><br>
-        Nama Mahasiswa : <input type="text" name="nama" maxlength="100"><br>
-        Nilai Tugas : <input type="number" name="tugas" min="0" max="100" value=NULL><br>
-        Nilai UTS : <input type="number" name="uts" min="0" max="100" value="NULL"><br>
-        Nilai UAS : <input type="number" name="uas" min="0" max="100" value="NULL"><br><br>
+        NIM : <input type="text" name="nim" id="nim" maxlength="9" ><br>
+        Nama Mahasiswa : <input type="text" name="nama" id="nama" maxlength="100"><br>
+        Nilai Tugas : <input type="number" name="tugas" id="tugas" min="0" max="100" value=NULL><br>
+        Nilai UTS : <input type="number" name="uts" id="uts" min="0" max="100" value="NULL"><br>
+        Nilai UAS : <input type="number" name="uas" id="uas" min="0" max="100" value="NULL"><br><br>
 
-        <input type="submit" name="input"><br>
+        <button onclick="simpan()">Simpan</button>
         <hr>
     </form>
 
-    <?php
-        if (isset($_POST['input'])) {
-            $nim = $_POST['nim'];
-            $nama = AddSlashes($_POST['nama']);
-            $tugas = $_POST['tugas'];
-            $uts = $_POST['uts'];
-            $uas = $_POST['uas'];
-
-            $sql = "INSERT INTO nilaimahasiswa VALUES ('', '$nim', '$nama', '$uts', '$uas', '$tugas')";
-
-            $conn->Execute($sql);
-            $result = $conn->Affected_Rows();
-
-    } ?>
-
-    <table>
-        <tr>
-            <th>NIM</th>
-            <th>NAMA</th>
-            <th>NILAI TUGAS</th>
-            <th>NILAU UTS</th>
-            <th>NILAU UAS</th>
-            <th>RATA-RATA</th>
-            <th>KONVERSI</th>
-            <th>PILIHAN</th>
-        </tr>
-
-        <?php
-            $rs = $conn->Execute("select * from nilaimahasiswa");
-
-            if($rs -> RecordCount() > 0){
-
-                while (!$rs->EOF) { ?>
-                    <tr>
-                        <td style="text-align:center;"><?php echo $rs->fields[1]; ?></td>
-                        <td style="text-align:center;"><?php echo $rs->fields[2]; ?></td>
-                        <td style="text-align:center;"><?php echo $rs->fields[5]; ?></td>
-                        <td style="text-align:center;"><?php echo $rs->fields[3]; ?></td>
-                        <td style="text-align:center;"><?php echo $rs->fields[4]; ?></td>
-                        <?php $mean = round(($rs->fields[3]+$rs->fields[4]+$rs->fields[5]) / 3); ?>
-                        <td style="text-align:center;"><?php echo $mean ?></td>
-                        <?php $abjad = $abjad = "NULL";
-                            if ($mean >= 90){
-                                $abjad = 'A';
-                            } elseif ($mean >= 80 && $mean <= 89) {
-                                $abjad = 'B';
-                            } elseif ($mean >= 70 && $mean <= 79) {
-                                $abjad = 'C';
-                            }elseif ($mean >= 60 && $mean <= 69) {
-                                $abjad = 'D';
-                            }else{
-                                $abjad = 'E';
-                            } ?>
-                        <td style="text-align:center;"><?php echo $abjad; ?></td>
-                        <td><a href="hapus.php?detail=<?php echo $rs->fields[0]; ?>" onclick="return confirm('Data akan dihapus, Anda yakin ?')">hapus</a> | <a href="edit.php?detail=<?php echo $rs->fields[0]; ?>">edit</a></td>
-                    </tr>
-                <?php
-                $rs->MoveNext();
-                }
-
-            }
-        ?>
-        
-    </table>
+    <div id="tabel">
+        <?php include_once 'tabel.php'?>
+    </div>
 
 </body>
 </html>

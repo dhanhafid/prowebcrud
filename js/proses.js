@@ -1,28 +1,66 @@
 function simpan() {
-    var nim = document.getElementById("nim").value;
-    var nama = document.getElementById("nama").value;
-    var tugas = document.getElementById("tugas").value;
-    var uts = document.getElementById("uts").value;
-    var uas = document.getElementById("uas").value;
+    var nim = document.getElementById('nim').value;
+    var nama = document.getElementById('nama').value;
+    var tugas = document.getElementById('tugas').value;
+    var uts = document.getElementById('uts').value;
+    var uas = document.getElementById('uas').value;
 
-    if (window.XMLHttpRequest) {
-        xmlhttp = new XMLHttpRequest();
-    } else {
-        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-    }
+    var xhr = new XMLHttpRequest();
 
-    var url = "./simpan.php";
     var params = "nim="+nim+"&nama="+nama+"&tugas="+tugas+"&uts="+uts+"&uas="+uas;
-    xmlhttp.open("POST", url, true);
-    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xmlhttp.onreadystatechange = function() {
-        if(xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-            document.getElementById("tabel").innerHTML = xmlhttp.responseText;
+    var url = "./tambah.php";
+    xhr.onreadystatechange = function() {
+        if(xhr.readyState == 4 && xhr.status == 200){
+            document.getElementById('tabel').innerHTML = xhr.responseText;
             bersih();
         }
     }
+    xhr.open("POST", url, true);
+    xhr.send(params);
+}
 
-    xmlhttp.send(params);
+function hapus(id) {
+    var xhr = new XMLHttpRequest();
+    var url = "./hapus.php?id=" + id;
+    xhr.onreadystatechange = function() {
+        if(xhr.readyState == 4 && xhr.status == 200){
+            document.getElementById('tabel').innerHTML = xhr.responseText;
+        }
+    }
+    xhr.open("GET", url, true);
+    xhr.send();
+}
+
+function edit(id) {
+    var xhr = new XMLHttpRequest();
+    var url = "./edit.php?id=" + id;
+    xhr.onreadystatechange = function() {
+        if(xhr.readyState == 4 && xhr.status == 200){
+            document.getElementById('edit').innerHTML = xhr.responseText;
+        }
+    }
+    xhr.open("GET", url, true);
+    xhr.send();
+}
+
+function simpanEdit(id) {
+    var nim = document.getElementById('nim').value;
+    var nama = document.getElementById('nama').value;
+    var tugas = document.getElementById('tugas').value;
+    var uts = document.getElementById('uts').value;
+    var uas = document.getElementById('uas').value;
+
+    var xhr = new XMLHttpRequest();
+
+    var params = "nim="+nim+"&nama="+nama+"&tugas="+tugas+"&uts="+uts+"&uas="+uas;
+    var url = "./edit.php?id=" + id;
+    xhr.onreadystatechange = function() {
+        if(xhr.readyState == 4 && xhr.status == 200){
+            document.getElementById('tabel').innerHTML = xhr.responseText;
+        }
+    }
+    xhr.open("POST", url, true);
+    xhr.send(params);
 }
 
 function bersih() {

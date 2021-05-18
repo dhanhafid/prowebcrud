@@ -1,12 +1,11 @@
 <?php
     include_once 'connect.php';
 
-    $id = $_GET['detail'];
+    $id = $_GET['id'];
 
     $sql = "DELETE FROM nilaimahasiswa WHERE id = '$id'  ";
     
     $rs = $conn->Execute($sql);
-    
 
-    header('location:index.php');
+    include 'tabel.php';
 ?>
